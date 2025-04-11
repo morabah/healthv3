@@ -10,9 +10,17 @@
     "format": "prettier --write \"**/*.{js,jsx,ts,tsx,json,css,md}\""
   },
   "dependencies": {
+    "@fortawesome/fontawesome-svg-core": "6.7.2",
+    "@fortawesome/free-solid-svg-icons": "6.7.2",
+    "@fortawesome/react-fontawesome": "0.2.2",
+    "@headlessui/react": "2.0.0",
+    "autoprefixer": "10.4.21",
+    "firebase": "11.6.0",
+    "firebase-admin": "13.2.0",
     "next": "15.3.0",
     "react": "^19.0.0",
-    "react-dom": "^19.0.0"
+    "react-dom": "^19.0.0",
+    "react-firebase-hooks": "5.1.1"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
