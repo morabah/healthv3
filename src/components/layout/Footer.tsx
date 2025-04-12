@@ -6,11 +6,11 @@ import React from 'react';
 import Link from 'next/link';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { 
-  faFacebookF, 
-  faTwitter, 
-  faInstagram, 
-  faLinkedinIn 
-} from '@fortawesome/free-brands-svg-icons';
+  faSquare,
+  faHashtag,
+  faGlobe,
+  faLink
+} from '@fortawesome/free-solid-svg-icons';
 
 const Footer: React.FC = () => {
   const currentYear = new Date().getFullYear();
@@ -79,7 +79,7 @@ const Footer: React.FC = () => {
                 className="text-gray-300 hover:text-white"
                 aria-label="Facebook"
               >
-                <FontAwesomeIcon icon={faFacebookF} />
+                <FontAwesomeIcon icon={faSquare} />
               </a>
               <a 
                 href="https://twitter.com" 
@@ -88,7 +88,7 @@ const Footer: React.FC = () => {
                 className="text-gray-300 hover:text-white"
                 aria-label="Twitter"
               >
-                <FontAwesomeIcon icon={faTwitter} />
+                <FontAwesomeIcon icon={faHashtag} />
               </a>
               <a 
                 href="https://instagram.com" 
@@ -97,7 +97,7 @@ const Footer: React.FC = () => {
                 className="text-gray-300 hover:text-white"
                 aria-label="Instagram"
               >
-                <FontAwesomeIcon icon={faInstagram} />
+                <FontAwesomeIcon icon={faSquare} />
               </a>
               <a 
                 href="https://linkedin.com" 
@@ -106,7 +106,7 @@ const Footer: React.FC = () => {
                 className="text-gray-300 hover:text-white"
                 aria-label="LinkedIn"
               >
-                <FontAwesomeIcon icon={faLinkedinIn} />
+                <FontAwesomeIcon icon={faLink} />
               </a>
             </div>
           </div>

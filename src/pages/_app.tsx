@@ -6,7 +6,7 @@
 import type { AppProps } from 'next/app';
 import { useEffect } from 'react';
 import { AuthProvider } from '../context/AuthContext';
-import Layout from '../components/Layout';
+import Layout from '../components/layout/Layout';
 import { logInfo } from '../lib/logger';
 import { trackPerformance } from '../lib/performance';
 import '../styles/globals.css';

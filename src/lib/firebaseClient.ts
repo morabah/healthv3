@@ -10,16 +10,21 @@ import { getStorage, FirebaseStorage } from 'firebase/storage';
 import { getFunctions, Functions } from 'firebase/functions';
 import { logInfo, logError } from './logger';
 import { connectToEmulators } from './firebaseEmulators';
+import { mockAuth, mockFunctions, mockStorage } from './mockFirebase';
 
-// Firebase configuration from environment variables
+// Enable testing mode with mock implementations
+// Set this to false to use real Firebase services
+const USE_MOCK_FIREBASE = process.env.NEXT_PUBLIC_USE_MOCK_FIREBASE === 'true' || false;
+
+// Firebase configuration
 const firebaseConfig = {
-  apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
-  authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
-  projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
-  storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
-  messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
-  appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
-  measurementId: process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID,
+  apiKey: "AIzaSyATegnW0o6bC6NOB6OtsZI501p8_Jy5isw",
+  authDomain: "helathcare-331f1.firebaseapp.com",
+  projectId: "helathcare-331f1",
+  storageBucket: "helathcare-331f1.appspot.com",
+  messagingSenderId: "662603978873",
+  appId: "1:662603978873:web:4b8102a82647b334419ca8",
+  measurementId: "G-LN6HZTXH2R"
 };
 
 // Singleton instances
@@ -28,6 +33,10 @@ let firebaseAuth: Auth;
 let firebaseFirestore: Firestore;
 let firebaseStorage: FirebaseStorage;
 let firebaseFunctions: Functions;
+
+// Flag to track if we're using mock Firebase config
+let usingMockConfig = false;
+let usingMockImplementation = false;
 
 /**
  * Initialize Firebase if it hasn't been initialized already
@@ -41,22 +50,34 @@ export const initializeFirebase = (): FirebaseApp => {
         context: 'firebaseClient',
       });
       
-      // Check if required environment variables are set
-      if (!process.env.NEXT_PUBLIC_FIREBASE_API_KEY || !process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID) {
-        throw new Error('Firebase environment variables are not properly configured');
+      // Check if we should use mock implementation for testing
+      if (USE_MOCK_FIREBASE) {
+        usingMockImplementation = true;
+        logInfo({
+          message: 'Using mock Firebase implementation for testing',
+          context: 'firebaseClient',
+        });
+        
+        // For mock implementation, we still initialize the app but won't use the services
+        firebaseApp = initializeApp(firebaseConfig);
+        return firebaseApp;
       }
       
       firebaseApp = initializeApp(firebaseConfig);
       
       // Connect to emulators in development and test environments
-      if (process.env.NODE_ENV !== 'production') {
+      if (process.env.NODE_ENV !== 'production' && process.env.NEXT_PUBLIC_USE_FIREBASE_EMULATORS === 'true') {
         connectToEmulators();
       }
       
       logInfo({
         message: 'Firebase client SDK initialized successfully',
         context: 'firebaseClient',
-        data: { projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID }
+        data: { 
+          projectId: firebaseConfig.projectId,
+          usingMockConfig,
+          usingMockImplementation
+        }
       });
     } else if (!firebaseApp) {
       firebaseApp = getApps()[0];
@@ -79,12 +100,21 @@ export const initializeFirebase = (): FirebaseApp => {
  * @returns Firebase Auth instance
  */
 export const getFirebaseAuth = (): Auth => {
+  if (usingMockImplementation || USE_MOCK_FIREBASE) {
+    logInfo({
+      message: 'Using mock Firebase Auth for testing',
+      context: 'firebaseClient'
+    });
+    return mockAuth as unknown as Auth;
+  }
+  
   if (!firebaseAuth) {
     const app = initializeFirebase();
     firebaseAuth = getAuth(app);
     logInfo({
       message: 'Firebase Auth initialized',
-      context: 'firebaseClient'
+      context: 'firebaseClient',
+      data: { usingMockConfig }
     });
   }
   return firebaseAuth;
@@ -100,7 +130,8 @@ export const getFirebaseFirestore = (): Firestore => {
     firebaseFirestore = getFirestore(app);
     logInfo({
       message: 'Firebase Firestore initialized',
-      context: 'firebaseClient'
+      context: 'firebaseClient',
+      data: { usingMockConfig }
     });
   }
   return firebaseFirestore;
@@ -111,12 +142,21 @@ export const getFirebaseFirestore = (): Firestore => {
  * @returns Firebase Storage instance
  */
 export const getFirebaseStorage = (): FirebaseStorage => {
+  if (usingMockImplementation || USE_MOCK_FIREBASE) {
+    logInfo({
+      message: 'Using mock Firebase Storage for testing',
+      context: 'firebaseClient'
+    });
+    return mockStorage as unknown as FirebaseStorage;
+  }
+  
   if (!firebaseStorage) {
     const app = initializeFirebase();
     firebaseStorage = getStorage(app);
     logInfo({
       message: 'Firebase Storage initialized',
-      context: 'firebaseClient'
+      context: 'firebaseClient',
+      data: { usingMockConfig }
     });
   }
   return firebaseStorage;
@@ -127,12 +167,21 @@ export const getFirebaseStorage = (): FirebaseStorage => {
  * @returns Firebase Functions instance
  */
 export const getFirebaseFunctions = (): Functions => {
+  if (usingMockImplementation || USE_MOCK_FIREBASE) {
+    logInfo({
+      message: 'Using mock Firebase Functions for testing',
+      context: 'firebaseClient'
+    });
+    return mockFunctions as unknown as Functions;
+  }
+  
   if (!firebaseFunctions) {
     const app = initializeFirebase();
     firebaseFunctions = getFunctions(app);
     logInfo({
       message: 'Firebase Functions initialized',
-      context: 'firebaseClient'
+      context: 'firebaseClient',
+      data: { usingMockConfig }
     });
   }
   return firebaseFunctions;

@@ -1,5 +1,10 @@
 /* Global styles for the Health Appointment System */
 
+/* Tailwind CSS directives */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 /* Base styles */
 html,
 body {
