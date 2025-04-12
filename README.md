@@ -1,5 +1,29 @@
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
+# Health Appointment System
+
+A comprehensive healthcare appointment management system built with Next.js, TypeScript, and Firebase.
+
+## Features
+
+- User authentication (patients and doctors)
+- Doctor verification system
+- Appointment scheduling and management
+- Real-time notifications
+- Medical records management
+- Admin dashboard
+
+## Tech Stack
+
+- **Frontend**: Next.js (React) with TypeScript
+- **Backend**: Firebase Cloud Functions (Node.js/TypeScript)
+- **Database**: Cloud Firestore (NoSQL Document Model)
+- **Authentication**: Firebase Authentication
+- **Storage**: Firebase Cloud Storage
+- **UI Styling**: Tailwind CSS
+- **UI Component Logic**: Headless UI / Radix UI primitives
+- **Icons**: Font Awesome
+
 ## Getting Started
 
 First, run the development server:
@@ -16,9 +40,41 @@ bun dev
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Testing
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+The project uses Jest and React Testing Library for testing, along with Firebase Emulator Suite for backend testing.
+
+### Running Tests
+
+```bash
+# Run all tests
+npm test
+
+# Run tests in watch mode
+npm run test:watch
+
+# Run tests with coverage report
+npm run test:coverage
+
+# Run tests with Firebase emulators
+npm run test:emulators
+```
+
+### Firebase Emulator Setup
+
+Before running tests with Firebase emulators, make sure you have the Firebase CLI installed:
+
+```bash
+npm install -g firebase-tools
+```
+
+To start the emulators manually:
+
+```bash
+firebase emulators:start --only auth,firestore,functions,storage
+```
+
+The Emulator UI will be available at [http://localhost:4000](http://localhost:4000).
 
 ## Learn More
 

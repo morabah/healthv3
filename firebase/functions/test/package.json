@@ -1,0 +1,12 @@
+{
+  "name": "health-appointment-system-tests",
+  "version": "1.0.0",
+  "description": "Tests for Health Appointment System Firebase Functions",
+  "type": "module",
+  "scripts": {
+    "test": "node ../test-register-user.mjs"
+  },
+  "dependencies": {
+    "firebase": "^10.8.0"
+  }
+}

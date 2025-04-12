@@ -1,0 +1,12 @@
+{
+  "name": "test-client",
+  "version": "1.0.0",
+  "description": "Test client for Firebase Functions",
+  "type": "module",
+  "scripts": {
+    "test": "node test-client.mjs"
+  },
+  "dependencies": {
+    "firebase": "^10.8.0"
+  }
+}

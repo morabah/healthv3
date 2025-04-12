@@ -1,5 +1,4 @@
 import * as admin from 'firebase-admin';
-import { Timestamp } from 'firebase-admin/firestore';
 import { PatientProfile } from '../../../../src/types/patient';
 import { logInfo, logError } from '../../../../src/lib/logger';
 import { trackPerformance } from '../../../../src/lib/performance';
@@ -55,6 +54,69 @@ export const createPatientProfile = async (
 
     // Stop performance tracking with error info
     perfTracker.stop({ userId: data.userId, error: true });
+
+    // Re-throw the error for the caller to handle
+    throw error;
+  }
+};
+
+/**
+ * Gets a patient profile from Firestore by user ID
+ * @param userId Firebase User ID
+ * @returns Promise resolving to the patient profile or null if not found
+ */
+export const getPatientProfile = async (
+  userId: string
+): Promise<PatientProfile | null> => {
+  // Log function start
+  logInfo({
+    message: 'Getting patient profile',
+    context: 'patientManagement',
+    data: { userId }
+  });
+
+  // Track performance
+  const perfTracker = trackPerformance('getPatientProfile', 'patientManagement');
+
+  try {
+    // Get from Firestore
+    const patientDoc = await admin.firestore()
+      .collection('patients')
+      .doc(userId)
+      .get();
+
+    // Check if patient exists
+    if (!patientDoc.exists) {
+      // Log patient not found
+      logInfo({
+        message: 'Patient profile not found',
+        context: 'patientManagement',
+        data: { userId }
+      });
+
+      // Stop performance tracking
+      perfTracker.stop({ userId, found: false });
+
+      return null;
+    }
+
+    // Get patient data
+    const patientData = patientDoc.data() as PatientProfile;
+
+    // Stop performance tracking
+    perfTracker.stop({ userId, found: true });
+
+    return patientData;
+  } catch (error) {
+    // Log error
+    logError({
+      message: 'Error getting patient profile',
+      context: 'patientManagement',
+      data: { userId, error }
+    });
+
+    // Stop performance tracking with error info
+    perfTracker.stop({ userId, error: true });
 
     // Re-throw the error for the caller to handle
     throw error;

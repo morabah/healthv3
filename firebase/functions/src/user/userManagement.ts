@@ -84,3 +84,66 @@ export const createUserProfile = async (
     throw error;
   }
 };
+
+/**
+ * Gets a user profile from Firestore by user ID
+ * @param userId Firebase User ID
+ * @returns Promise resolving to the user profile or null if not found
+ */
+export const getUserProfile = async (
+  userId: string
+): Promise<UserProfile | null> => {
+  // Log function start
+  logInfo({
+    message: 'Getting user profile',
+    context: 'userManagement',
+    data: { userId }
+  });
+
+  // Track performance
+  const perfTracker = trackPerformance('getUserProfile', 'userManagement');
+
+  try {
+    // Get from Firestore
+    const userDoc = await admin.firestore()
+      .collection('users')
+      .doc(userId)
+      .get();
+
+    // Check if user exists
+    if (!userDoc.exists) {
+      // Log user not found
+      logInfo({
+        message: 'User profile not found',
+        context: 'userManagement',
+        data: { userId }
+      });
+
+      // Stop performance tracking
+      perfTracker.stop({ userId, found: false });
+
+      return null;
+    }
+
+    // Get user data
+    const userData = userDoc.data() as UserProfile;
+
+    // Stop performance tracking
+    perfTracker.stop({ userId, found: true });
+
+    return userData;
+  } catch (error) {
+    // Log error
+    logError({
+      message: 'Error getting user profile',
+      context: 'userManagement',
+      data: { userId, error }
+    });
+
+    // Stop performance tracking with error info
+    perfTracker.stop({ userId, error: true });
+
+    // Re-throw the error for the caller to handle
+    throw error;
+  }
+};
