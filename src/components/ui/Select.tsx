@@ -14,7 +14,7 @@ export interface SelectOption {
 }
 
 export interface SelectProps {
-  options: SelectOption[];
+  options?: SelectOption[];
   value?: string;
   onChange?: (value: string) => void;
   placeholder?: string;
@@ -25,6 +25,9 @@ export interface SelectProps {
   required?: boolean;
   fullWidth?: boolean;
   className?: string;
+  children?: React.ReactNode;
+  name?: string;
+  id?: string;
 }
 
 const Select = forwardRef<HTMLButtonElement, SelectProps>(({
@@ -38,10 +41,15 @@ const Select = forwardRef<HTMLButtonElement, SelectProps>(({
   disabled = false,
   required = false,
   fullWidth = false,
-  className = ''
+  className = '',
+  children,
+  name,
+  id: propId,
+  ...props
 }, ref) => {
   // Generate a unique ID for accessibility
-  const id = React.useId();
+  const generatedId = React.useId();
+  const id = propId || generatedId;
   
   const handleValueChange = (newValue: string) => {
     if (onChange) {
@@ -64,6 +72,7 @@ const Select = forwardRef<HTMLButtonElement, SelectProps>(({
         value={value}
         onValueChange={handleValueChange}
         disabled={disabled}
+        name={name}
       >
         <SelectPrimitive.Trigger
           ref={ref}
@@ -104,7 +113,8 @@ const Select = forwardRef<HTMLButtonElement, SelectProps>(({
             </SelectPrimitive.ScrollUpButton>
             
             <SelectPrimitive.Viewport className="p-1">
-              {options.map((option) => (
+              {/* Render children if provided, otherwise render options */}
+              {children || (options && options.map((option) => (
                 <SelectPrimitive.Item
                   key={option.value}
                   value={option.value}
@@ -121,7 +131,7 @@ const Select = forwardRef<HTMLButtonElement, SelectProps>(({
                     <FontAwesomeIcon icon={faCheck} className="h-4 w-4" />
                   </SelectPrimitive.ItemIndicator>
                 </SelectPrimitive.Item>
-              ))}
+              )))}
             </SelectPrimitive.Viewport>
             
             <SelectPrimitive.ScrollDownButton className="flex items-center justify-center h-6 bg-white text-gray-700 cursor-default">

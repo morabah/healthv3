@@ -14,7 +14,8 @@ import {
   faVenusMars, 
   faTint, 
   faNotesMedical,
-  faSave
+  faSave,
+  faPen
 } from '@fortawesome/free-solid-svg-icons';
 import { UserType } from '@/types/enums';
 import { useProtectedRoute } from '@/hooks/useProtectedRoute';

@@ -10,6 +10,15 @@ export interface DoctorProfile {
   /** Reference to the UserProfile.id this doctor data belongs to */
   userId: string;
   
+  /** Unique identifier for the doctor profile */
+  id?: string;
+  
+  /** Doctor's first name */
+  firstName?: string;
+  
+  /** Doctor's last name */
+  lastName?: string;
+  
   /** Doctor's medical specialty (e.g., 'Cardiology', 'Pediatrics') */
   specialty: string;
   
@@ -43,11 +52,20 @@ export interface DoctorProfile {
   /** URL to the doctor's profile picture */
   profilePictureUrl: string | null;
   
+  /** URL to the doctor's profile image (alternative name) */
+  profileImageUrl?: string | null;
+  
   /** URL to the doctor's license document */
   licenseDocumentUrl: string | null;
   
   /** URL to the doctor's certificates */
   certificateUrl: string | null;
+  
+  /** Doctor's rating (1-5) */
+  rating?: number;
+  
+  /** Number of reviews */
+  reviewCount?: number;
 }
 
 /**
@@ -107,6 +125,9 @@ export function createDoctorProfile(
 ): DoctorProfile {
   return {
     userId,
+    id: undefined,
+    firstName: undefined,
+    lastName: undefined,
     specialty: '',
     licenseNumber: '',
     yearsOfExperience: 0,
@@ -118,8 +139,11 @@ export function createDoctorProfile(
     languages: null,
     consultationFee: null,
     profilePictureUrl: null,
+    profileImageUrl: null,
     licenseDocumentUrl: null,
     certificateUrl: null,
+    rating: undefined,
+    reviewCount: undefined,
     ...data
   };
 }
